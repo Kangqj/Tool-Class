@@ -10,17 +10,19 @@
 
 @interface UIImage (colorful)
 
-+ (UIImage *)imageWithColor:(UIColor *)color;
++ (UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size;
 + (UIImage *)imageWithCornerRadius:(float)cornerRadius image:(UIImage *)oriImage;
++ (UIImage *)createRoundImageSize:(CGSize)size color:(UIColor *)color;
+
 
 @end
 
 @implementation UIImage (colorful)
 
 //根据颜色生成图片
-+ (UIImage *)imageWithColor:(UIColor *)color
++ (UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size
 {
-    CGRect rect = CGRectMake(0, 0, 100, 100);
+    CGRect rect = CGRectMake(0, 0, size.width, size.height);
     
     UIGraphicsBeginImageContext(rect.size);
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -53,6 +55,26 @@
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     
     // Lets forget about that we were drawing
+    UIGraphicsEndImageContext();
+    
+    return image;
+}
+
++ (UIImage *)createRoundImageSize:(CGSize)size color:(UIColor *)color
+{
+    CGFloat red = [UIColor redValueFrom:color];
+    CGFloat green = [UIColor greenValueFrom:color];
+    CGFloat blue = [UIColor blueValueFrom:color];
+    
+    UIGraphicsBeginImageContext(size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetRGBStrokeColor(context, red, green, blue, 1.0);
+    
+    CGContextSetLineWidth(context, 5.0);
+    CGContextAddArc(context, size.width/2.0f, size.height/2.0f, size.width/2.0f - 5, 0, 2*M_PI, 0);
+    CGContextDrawPath(context, kCGPathStroke);
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
     return image;
