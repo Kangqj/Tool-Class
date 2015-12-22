@@ -62,9 +62,11 @@
 
 + (UIImage *)createRoundImageSize:(CGSize)size color:(UIColor *)color
 {
-    CGFloat red = [UIColor redValueFrom:color];
-    CGFloat green = [UIColor greenValueFrom:color];
-    CGFloat blue = [UIColor blueValueFrom:color];
+    const CGFloat *components = CGColorGetComponents(color.CGColor);
+    
+    CGFloat red = components[0];
+    CGFloat green = components[1];
+    CGFloat blue = components[2];
     
     UIGraphicsBeginImageContext(size);
     CGContextRef context = UIGraphicsGetCurrentContext();
